@@ -1,4 +1,6 @@
 import { createServer as createViteDevServer } from "vite"
+import { pluginIndexHtml } from "../plugin-island/indexHtml"
+import react from "@vitejs/plugin-react"
 /**
  * 用于创建开发服务器
  *
@@ -8,5 +10,6 @@ import { createServer as createViteDevServer } from "vite"
 export async function createDevServer(root: string) {
 	return createViteDevServer({
 		root,
+		plugins: [pluginIndexHtml(), react()],
 	})
 }
