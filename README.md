@@ -30,6 +30,11 @@ pnpm start
 
 调试 cli 如下:
 
-- 1. 在 package.json 中声明 bin 字段
-- 2. 通过 `npm link` 将命令 link 到全局
-- 3. 执行 `su-island dev` 命令
+- 在 package.json 中声明 bin 字段
+- 通过 `npm link` 将命令 link 到全局
+- 执行 `su-island dev` 命令
+
+# LICENSE
+
+[MIT](https://github.com/zhenghui-su/su-island/blob/master/LICENSE)
+Copyright (c) 2024 suzhenghui
