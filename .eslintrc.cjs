@@ -16,7 +16,12 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'react-hooks', 'prettier'],
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        'endOfLine': 'auto'
+      }
+    ],
     // 引号, 不是单引号报错
     quotes: ['error', 'single'],
     // 有没有分号, 没有报错
