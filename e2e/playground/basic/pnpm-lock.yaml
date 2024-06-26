@@ -1,0 +1,7 @@
+lockfileVersion: 5.4
+
+specifiers:
+  su-island: ../../..
+
+dependencies:
+  su-island: link:../../..
