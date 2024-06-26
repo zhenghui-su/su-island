@@ -103,6 +103,6 @@ export async function build(root: string) {
 	const serverEntryPath = join(root, ".temp", "ssr-entry.js")
 	// 3. 服务端渲染, 产出 HTML
 	// 为了兼容Windows, 绝对路径前需要加上file前缀
-	const { render } = await import(pathToFileURL(serverEntryPath).href)
+	const { render } = await import(pathToFileURL(serverEntryPath).toString())
 	await renderPage(render, root, clientBundle)
 }
