@@ -34,6 +34,20 @@ pnpm start
 - 通过 `npm link` 将命令 link 到全局
 - 执行 `su-island dev` 命令
 
+运行打包命令:
+
+```bash
+su-island build docs
+```
+
+这将生成打包目录 build 到 docs 下
+
+预览产物命令暂未书写, 你可以通过进入到 build 目录终端运行如下命令暂时预览
+
+```bash
+serve .
+```
+
 # LICENSE
 
 [MIT](https://github.com/zhenghui-su/su-island/blob/master/LICENSE)
