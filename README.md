@@ -28,6 +28,13 @@ ts 编译运行监控命令:
 pnpm start
 ```
 
+为什么要使用 tsup:
+
+- 我们使用在 build 里使用`import ora from 'ora'`导入, 用`tsc -w`运行, 然后打包会报错
+- 我们查看/dist/node/build.js, 会发现 ora 是通过 require 方式引入的, 而 ora 是一个 esm 的包, 因此这里会报错
+- 值得注意的是 esm 可以导入 cjs 包, 反之则不行
+- 根本原因: 模块加载机制不同, CJS 同步加载, ESM 异步加载
+
 调试 cli 如下:
 
 - 在 package.json 中声明 bin 字段

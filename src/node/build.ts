@@ -1,8 +1,13 @@
-import { InlineConfig, build as viteBuild } from "vite"
+import { build as viteBuild, InlineConfig } from "vite"
+import type { RollupOutput } from "rollup"
 import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from "./constants"
-import type { RollupOutput, RollupWatcher } from "rollup"
 import { join } from "path"
-import * as fs from "fs-extra"
+import fs from "fs-extra"
+import ora from "ora"
+import { pathToFileURL } from "url"
+
+// 用于绕过tsc, 不让其将import的导入转为require
+// const dynamicImport = new Function("m", "return import(m)")
 
 export async function bundle(root: string) {
 	/**
@@ -27,8 +32,9 @@ export async function bundle(root: string) {
 			},
 		}
 	}
-
-	console.log("Building client + server bundles...")
+	// 创建动画
+	const spinner = ora()
+	// spinner.start("Building client + server bundles...")
 
 	try {
 		const [clientBundle, serverBundle] = await Promise.all([
@@ -96,6 +102,7 @@ export async function build(root: string) {
 	// 2. 引入 ssr-entry 模块-注意是产物
 	const serverEntryPath = join(root, ".temp", "ssr-entry.js")
 	// 3. 服务端渲染, 产出 HTML
-	const { render } = require(serverEntryPath)
+	// 为了兼容Windows, 绝对路径前需要加上file前缀
+	const { render } = await import(pathToFileURL(serverEntryPath).href)
 	await renderPage(render, root, clientBundle)
 }

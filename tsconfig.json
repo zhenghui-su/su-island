@@ -3,7 +3,9 @@
 		"outDir": "dist", // 输出目录
 		"target": "ESNext", // JS的版本
 		"module": "CommonJS", // 模块规范
-		"rootDir": "src", // 源代码目录
-		"jsx": "react-jsx" // JSX的处理方式
+		"rootDir": ".", // 源代码目录
+		"jsx": "react-jsx", // JSX的处理方式
+		"moduleResolution": "node", // 模块解析策略
+		"esModuleInterop": true // 允许使用ES的方式导入CommonJS
 	}
 }
