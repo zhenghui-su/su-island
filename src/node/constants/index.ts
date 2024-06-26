@@ -2,7 +2,7 @@ import { join } from "path"
 /**
  * 项目根目录
  */
-export const PACKAGE_ROOT = join(__dirname, "..", "..", "..")
+export const PACKAGE_ROOT = join(__dirname, "..")
 /**
  * 运行时根目录
  */
