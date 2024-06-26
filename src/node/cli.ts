@@ -1,5 +1,7 @@
 import cac from "cac"
 import { createDevServer } from "./dev"
+import { build } from "./build"
+import { resolve } from "path"
 
 // 创建cli
 const cli = cac("su-island").version("0.0.1").help()
@@ -21,7 +23,8 @@ cli
 cli
 	.command("build [root]", "build in production")
 	.action(async (root: string) => {
-		console.log("build", root)
+		root = resolve(root)
+		await build(root)
 	})
 
 // 解析命令
