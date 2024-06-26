@@ -1,0 +1,20 @@
+{
+  "name": "basic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "su-island dev docs",
+    "build": "su-island build docs",
+    "preview": "su-island start docs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "su-island": "../../.."
+  }
+}
