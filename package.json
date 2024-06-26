@@ -4,29 +4,33 @@
 	"description": "一款SSG生成框架, 用于快速搭建文档中心, 类似 vitePress",
 	"main": "index.js",
 	"scripts": {
-		"start": "tsc -w"
+		"start": "tsup --watch",
+		"build": "tsup",
+		"preview": "cd build && serve ."
 	},
 	"bin": {
 		"su-island": "/bin/island.js"
 	},
 	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"author": "suzhenghui",
+	"license": "MIT",
 	"devDependencies": {
-		"@types/fs-extra": "^11.0.4",
+		"@types/fs-extra": "^9.0.13",
 		"@types/node": "^18.11.7",
 		"@types/react": "^18.0.24",
 		"@types/react-dom": "^18.0.8",
-		"rollup": "^4.18.0",
+		"rollup": "^3.2.3",
 		"serve": "^14.2.3",
+		"tsup": "^6.5.0",
 		"typescript": "^4.8.4"
 	},
 	"dependencies": {
 		"@vitejs/plugin-react": "^4.3.1",
 		"cac": "^6.7.14",
-		"fs-extra": "^11.2.0",
+		"fs-extra": "^10.1.0",
+		"ora": "^6.1.2",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"vite": "^5.3.1"
+		"vite": "^4.4.0"
 	}
 }
