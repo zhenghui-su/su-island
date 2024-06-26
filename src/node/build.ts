@@ -1,10 +1,10 @@
 import { build as viteBuild, InlineConfig } from "vite"
 import type { RollupOutput } from "rollup"
 import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from "./constants"
-import { join, resolve } from "path"
+import { join } from "path"
 import fs from "fs-extra"
 import ora from "ora"
-import os from "os"
+import { pathToFileURL } from "url"
 
 // 用于绕过tsc, 不让其将import的导入转为require
 // const dynamicImport = new Function("m", "return import(m)")
@@ -102,13 +102,7 @@ export async function build(root: string) {
 	// 2. 引入 ssr-entry 模块-注意是产物
 	const serverEntryPath = join(root, ".temp", "ssr-entry.js")
 	// 3. 服务端渲染, 产出 HTML
-	// Windows绝对路径加上file, 其他不用
-	// 判断当前操作系统
-	const isWindows = os.platform() === "win32"
-	const serverEntryUrl = isWindows
-		? new URL(`file://${resolve(serverEntryPath)}`)
-		: new URL(`file://${serverEntryPath}`)
-
-	const { render } = await import(serverEntryUrl.href)
+	// 为了兼容Windows, 绝对路径前需要加上file前缀
+	const { render } = await import(pathToFileURL(serverEntryPath).href)
 	await renderPage(render, root, clientBundle)
 }
