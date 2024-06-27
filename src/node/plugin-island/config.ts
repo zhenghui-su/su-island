@@ -12,7 +12,7 @@ const SITE_DATA_ID = 'su-island:site-data';
  * @returns 返回一个虚拟模块
  */
 export function pluginConfig(
-  config: SiteConfig,
+  sitConfig: SiteConfig,
   restartServer: () => Promise<void>
 ): Plugin {
   // let server: ViteDevServer | null = null;
@@ -25,7 +25,7 @@ export function pluginConfig(
     },
     load(id) {
       if (id === '\0' + SITE_DATA_ID) {
-        return `export default ${JSON.stringify(config.siteData)}`;
+        return `export default ${JSON.stringify(sitConfig.siteData)}`;
       }
     },
     // configureServer(s) {
@@ -35,20 +35,20 @@ export function pluginConfig(
     // 用于监听配置文件热更新的函数
     async handleHotUpdate(ctx) {
       // 需要监听的文件
-      const isWindow = os.platform() === 'win32';
-      let customWatchedFiles;
-      if (isWindow) {
-        // window需要路径替换
-        customWatchedFiles = [config.configPath.replaceAll('\\', '/')];
-      } else {
-        customWatchedFiles = [config.configPath];
-      }
+      const isWindows = os.platform() === 'win32';
+      const customWatchedFiles = [
+        sitConfig.configPath,
+        ...sitConfig.dependencies
+      ].map((file) => (isWindows ? file.replaceAll('\\', '/') : file));
       // 找寻是否是监听的文件
       const include = (id: string) =>
         customWatchedFiles.some((file) => id.includes(file));
       if (include(ctx.file)) {
         console.log(
-          `\n${relative(config.root, ctx.file)} changed, restarting server...`
+          `\n${relative(
+            sitConfig.root,
+            ctx.file
+          )} changed, restarting server...`
         );
         // 重启 Dev Server
         // 方案讨论:

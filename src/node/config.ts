@@ -51,15 +51,15 @@ export async function resolveUserConfig(
     root
   );
   if (result) {
-    const { config: rawConfig = {} as RawConfig } = result;
-    // 三种形式
+    const { config: rawConfig = {} as RawConfig, dependencies } = result;
+    // config 三种形式
     // 1. object
     // 2. promise
     // 3. function 返回 object或promise
     const userConfig = await (typeof rawConfig === 'function'
       ? rawConfig()
       : rawConfig);
-    return [configPath, userConfig] as const;
+    return [configPath, userConfig, dependencies] as const;
   } else {
     return [configPath, {} as UserConfig] as const;
   }
@@ -90,11 +90,16 @@ export async function resolveConfig(
   command: 'serve' | 'build',
   mode: 'development' | 'production'
 ): Promise<SiteConfig> {
-  const [configPath, userConfig] = await resolveUserConfig(root, command, mode);
+  const [configPath, userConfig, dependencies] = await resolveUserConfig(
+    root,
+    command,
+    mode
+  );
   const siteConfig: SiteConfig = {
     root,
     configPath: configPath,
-    siteData: resolveSiteData(userConfig as UserConfig)
+    siteData: resolveSiteData(userConfig as UserConfig),
+    dependencies
   };
   return siteConfig;
 }

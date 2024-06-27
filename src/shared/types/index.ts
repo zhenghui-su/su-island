@@ -64,4 +64,5 @@ export interface SiteConfig {
   root: string;
   configPath: string;
   siteData: UserConfig;
+  dependencies: string[];
 }

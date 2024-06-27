@@ -14,10 +14,14 @@ export async function createDevServer(
   root: string,
   restartServer: () => Promise<void>
 ) {
-  const config = await resolveConfig(root, 'serve', 'development');
+  const siteConfig = await resolveConfig(root, 'serve', 'development');
   return createViteDevServer({
     root,
-    plugins: [pluginIndexHtml(), react(), pluginConfig(config, restartServer)],
+    plugins: [
+      pluginIndexHtml(),
+      react(),
+      pluginConfig(siteConfig, restartServer)
+    ],
     server: {
       fs: {
         allow: [PACKAGE_ROOT]
