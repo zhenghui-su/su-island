@@ -1,6 +1,6 @@
 import { Plugin } from 'vite';
 import { readFile } from 'fs/promises';
-import { CLIENT_ENTRY_PATH, DEFAULT_HTML_PATH } from '../node/constants';
+import { CLIENT_ENTRY_PATH, DEFAULT_HTML_PATH } from '../constants';
 
 /**
  * 自定义 vite 插件, 用于首页 html 处理返回给浏览器
