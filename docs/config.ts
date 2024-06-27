@@ -1,4 +1,6 @@
-export default {
-  a: 1,
-  b: 2
-}
+import {defineConfig} from '../dist';
+
+export default defineConfig({
+  title: 'su-island',
+  description: 'su-island'
+})
