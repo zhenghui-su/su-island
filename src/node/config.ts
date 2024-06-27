@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import fs from 'fs-extra';
 import { loadConfigFromFile } from 'vite';
-import { UserConfig } from '../shared/types/index';
+import { SiteConfig, UserConfig } from '../shared/types/index';
 
 type RawConfig =
   | UserConfig
@@ -34,7 +34,7 @@ function getUserConfigPath(root: string) {
  * @param command 'serve' | 'build'
  * @param mode 'production' | 'development'
  */
-export async function resolveConfig(
+export async function resolveUserConfig(
   root: string,
   command: 'serve' | 'build',
   mode: 'production' | 'development'
@@ -63,4 +63,42 @@ export async function resolveConfig(
   } else {
     return [configPath, {} as UserConfig] as const;
   }
+}
+/**
+ * 用于处理用户传入的配置
+ *
+ * @param userConfig 用户配置文件
+ * @returns 返回用户配置或默认内容
+ */
+export function resolveSiteData(userConfig: UserConfig): UserConfig {
+  return {
+    title: userConfig.title || 'su-island',
+    description: userConfig.description || 'SSG Framework',
+    themeConfig: userConfig.themeConfig || {},
+    vite: userConfig.vite || {}
+  };
+}
+/**
+ * 用于处理配置文件, 返回最终的配置
+ *
+ * @param root 根目录
+ * @param command 'serve' | 'build'
+ * @param mode 'production' | 'development'
+ */
+export async function resolveConfig(
+  root: string,
+  command: 'serve' | 'build',
+  mode: 'development' | 'production'
+): Promise<SiteConfig> {
+  const [configPath, userConfig] = await resolveUserConfig(root, command, mode);
+  const siteConfig: SiteConfig = {
+    root,
+    configPath: configPath,
+    siteData: resolveSiteData(userConfig as UserConfig)
+  };
+  return siteConfig;
+}
+
+export function defineConfig(config: UserConfig) {
+  return config;
 }
