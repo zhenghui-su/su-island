@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 import { PACKAGE_ROOT } from './constants';
 import { resolveConfig } from './config';
 import { pluginConfig } from './plugin-island/config';
+import { pluginRoutes } from './plugin-routes';
 /**
  * 用于创建开发服务器
  *
@@ -22,7 +23,8 @@ export async function createDevServer(
     plugins: [
       pluginIndexHtml(),
       react(),
-      pluginConfig(siteConfig, restartServer)
+      pluginConfig(siteConfig, restartServer),
+      pluginRoutes({ root: siteConfig.root })
     ],
     server: {
       fs: {
