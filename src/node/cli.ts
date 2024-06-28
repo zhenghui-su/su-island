@@ -1,6 +1,7 @@
 import cac from 'cac';
 import { build } from './build';
 import { resolve } from 'path';
+import { resolveConfig } from './config';
 
 // 创建cli
 const cli = cac('su-island').version('0.0.1').help();
@@ -34,8 +35,13 @@ cli
 cli
   .command('build [root]', 'build in production')
   .action(async (root: string) => {
-    root = resolve(root);
-    await build(root);
+    try {
+      root = resolve(root);
+      const config = await resolveConfig(root, 'build', 'production');
+      await build(root, config);
+    } catch (e) {
+      console.log(e);
+    }
   });
 
 // 解析命令

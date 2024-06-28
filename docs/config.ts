@@ -1,7 +1,6 @@
-import { a } from './index';
-import {defineConfig} from '../dist';
+import { defineConfig } from '../dist';
 
 export default defineConfig({
-  title: a,
+  title: 'su-island',
   description: 'su-island'
 })

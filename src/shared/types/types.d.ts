@@ -3,3 +3,8 @@ declare module 'su-island:site-data' {
   const siteData: UserConfig;
   export default siteData;
 }
+declare module 'su-island:routes' {
+  import { RouteObject } from 'react-router-dom';
+  const routes: RouteObject[];
+  export { routes };
+}

@@ -1,7 +1,8 @@
-import { relative } from 'path';
+import { join, relative } from 'path';
 import { SiteConfig } from 'shared/types/index';
 import { Plugin } from 'vite';
 import os from 'os';
+import { PACKAGE_ROOT } from 'node/constants';
 
 const SITE_DATA_ID = 'su-island:site-data';
 /**
@@ -9,11 +10,12 @@ const SITE_DATA_ID = 'su-island:site-data';
  * - 同时监听配置文件的变化-启动热更新服务
  *
  * @param config 处理后的配置文件
+ * @param restartServer 重启服务的方法
  * @returns 返回一个虚拟模块
  */
 export function pluginConfig(
   sitConfig: SiteConfig,
-  restartServer: () => Promise<void>
+  restartServer?: () => Promise<void>
 ): Plugin {
   // let server: ViteDevServer | null = null;
   return {
@@ -27,6 +29,15 @@ export function pluginConfig(
       if (id === '\0' + SITE_DATA_ID) {
         return `export default ${JSON.stringify(sitConfig.siteData)}`;
       }
+    },
+    config() {
+      return {
+        resolve: {
+          alias: {
+            '@runtime': join(PACKAGE_ROOT, 'src', 'runtime', 'index.ts')
+          }
+        }
+      };
     },
     // configureServer(s) {
     //   // 将 vite 的 dev server 赋值
