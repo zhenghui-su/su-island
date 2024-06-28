@@ -3,13 +3,16 @@ import type { RollupOutput } from 'rollup';
 import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
 import { join } from 'path';
 import fs from 'fs-extra';
-import ora from 'ora';
+// import ora from 'ora';
 import { pathToFileURL } from 'url';
+import { SiteConfig } from 'shared/types';
+import react from '@vitejs/plugin-react';
+import { pluginConfig } from './plugin-island/config';
 
 // 用于绕过tsc, 不让其将import的导入转为require
 // const dynamicImport = new Function("m", "return import(m)")
 
-export async function bundle(root: string) {
+export async function bundle(root: string, config: SiteConfig) {
   /**
    * 复用打包代码
    *
@@ -20,6 +23,11 @@ export async function bundle(root: string) {
     return {
       mode: 'production',
       root,
+      plugins: [react(), pluginConfig(config)],
+      ssr: {
+        // 将引入第三方包变为将这个包打包进产物
+        noExternal: ['react-router-dom']
+      },
       build: {
         ssr: isServer,
         outDir: isServer ? '.temp' : 'build',
@@ -33,9 +41,8 @@ export async function bundle(root: string) {
     };
   };
   // 创建动画
-  const spinner = ora();
-  spinner.start('Building client + server bundles...');
-
+  // const spinner = ora();
+  // spinner.start('Building client + server bundles...');
   try {
     const [clientBundle, serverBundle] = await Promise.all([
       // client build
@@ -95,9 +102,9 @@ export async function renderPage(
  *
  * @param root 路径
  */
-export async function build(root: string) {
+export async function build(root: string, config: SiteConfig) {
   // 1. bundle - client 端 + server 端
-  const [clientBundle] = await bundle(root);
+  const [clientBundle] = await bundle(root, config);
   // debugger; 可以起一个debugger terminal 来看这个客户端产物是什么样的
   // 2. 引入 ssr-entry 模块-注意是产物
   const serverEntryPath = join(root, '.temp', 'ssr-entry.js');
