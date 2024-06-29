@@ -6,8 +6,7 @@ import fs from 'fs-extra';
 // import ora from 'ora';
 import { pathToFileURL } from 'url';
 import { SiteConfig } from 'shared/types';
-import react from '@vitejs/plugin-react';
-import { pluginConfig } from './plugin-island/config';
+import { createVitePlugins } from './vitePlugins';
 
 // 用于绕过tsc, 不让其将import的导入转为require
 // const dynamicImport = new Function("m", "return import(m)")
@@ -23,7 +22,7 @@ export async function bundle(root: string, config: SiteConfig) {
     return {
       mode: 'production',
       root,
-      plugins: [react(), pluginConfig(config)],
+      plugins: createVitePlugins(config),
       ssr: {
         // 将引入第三方包变为将这个包打包进产物
         noExternal: ['react-router-dom']
