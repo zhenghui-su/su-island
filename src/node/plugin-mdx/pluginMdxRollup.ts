@@ -8,6 +8,7 @@ import remarkPluginFrontmatter from 'remark-frontmatter';
 import { rehypePluginPreWrapper } from './rehypePlugins/preWrapper';
 import { rehypePluginShiki } from './rehypePlugins/shiki';
 import shiki from 'shiki';
+import { remarkPluginToc } from './remarkPlugins/toc';
 
 /**
  * @mdx-js/rollup 插件
@@ -25,7 +26,8 @@ export async function pluginMdxRollup(): Promise<Plugin> {
        * 会生成 export const title = 'su-island'
        * name 表示将所有字段收敛到 frontmatter 对象上
        */
-      [remarkPluginMDXFrontMatter, { name: 'frontmatter' }]
+      [remarkPluginMDXFrontMatter, { name: 'frontmatter' }],
+      remarkPluginToc
     ],
     rehypePlugins: [
       rehypePluginSlug,
