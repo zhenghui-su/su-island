@@ -18,11 +18,13 @@ export async function bundle(root: string, config: SiteConfig) {
    * @param isServer 服务端渲染还是客户端渲染
    * @returns 返回 vite 打包配置
    */
-  const resolveViteConfig = (isServer: boolean): InlineConfig => {
+  const resolveViteConfig = async (
+    isServer: boolean
+  ): Promise<InlineConfig> => {
     return {
       mode: 'production',
       root,
-      plugins: createVitePlugins(config),
+      plugins: await createVitePlugins(config),
       ssr: {
         // 将引入第三方包变为将这个包打包进产物
         noExternal: ['react-router-dom']
@@ -45,9 +47,9 @@ export async function bundle(root: string, config: SiteConfig) {
   try {
     const [clientBundle, serverBundle] = await Promise.all([
       // client build
-      viteBuild(resolveViteConfig(false)),
+      viteBuild(await resolveViteConfig(false)),
       // server build
-      viteBuild(resolveViteConfig(true))
+      viteBuild(await resolveViteConfig(true))
     ]);
     return [clientBundle, serverBundle] as [RollupOutput, RollupOutput];
   } catch (e) {
