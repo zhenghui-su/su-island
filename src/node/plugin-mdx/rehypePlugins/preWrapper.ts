@@ -28,7 +28,7 @@ export const rehypePluginPreWrapper: Plugin<[], Root> = () => {
         // 语法名称
         const lang = codeClassName.split('-')[1];
 
-        codeNode.properties.className = '';
+        // codeNode.properties.className = '';
 
         const cloneNode: Element = {
           type: 'element',

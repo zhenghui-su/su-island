@@ -3,7 +3,9 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
 import { describe, test, expect } from 'vitest';
-import { rehypePluginPreWrapper } from '../../node/plugin-mdx/rehypePlugins/preWrapper';
+import { rehypePluginPreWrapper } from '../plugin-mdx/rehypePlugins/preWrapper';
+import { rehypePluginShiki } from '../plugin-mdx/rehypePlugins/shiki';
+import shiki from 'shiki';
 
 // markdown语法编译测试
 describe('Markdown complie cases', async () => {
@@ -13,7 +15,10 @@ describe('Markdown complie cases', async () => {
     .use(remarkParse)
     .use(remarkRehype)
     .use(rehypeStringify)
-    .use(rehypePluginPreWrapper);
+    .use(rehypePluginPreWrapper)
+    .use(rehypePluginShiki, {
+      highlighter: await shiki.getHighlighter({ theme: 'nord' })
+    });
   // 测试编译标题
   test('Compile title', async () => {
     const mdTitle = '# 123';
@@ -37,9 +42,6 @@ describe('Markdown complie cases', async () => {
     //   <span class="lang">js</span>
     //   <pre><code>...</code></pre>
     // </div>
-    expect(result.value).toMatchInlineSnapshot(`
-      "<div class=\\"language-js\\"><span class=\\"lang\\">js</span><pre><code class=\\"\\">console.log(123);
-      </code></pre></div>"
-    `);
+    expect(result.value).toMatchInlineSnapshot();
   });
 });
