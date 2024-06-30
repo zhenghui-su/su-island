@@ -4,6 +4,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePluginSlug from 'rehype-slug';
 import remarkPluginMDXFrontMatter from 'remark-mdx-frontmatter';
 import remarkPluginFrontmatter from 'remark-frontmatter';
+import { rehypePluginPreWrapper } from './rehypePlugins/preWrapper';
 
 /**
  * @mdx-js/rollup 插件
@@ -37,7 +38,8 @@ export function pluginMdxRollup() {
             value: '#'
           }
         }
-      ]
+      ],
+      rehypePluginPreWrapper
     ]
   });
 }
