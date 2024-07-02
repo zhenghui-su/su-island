@@ -1,3 +1,4 @@
+import { ComponentType } from 'react';
 import { UserConfig as ViteConfiguration } from 'vite';
 /**
  * - text: 文本
@@ -65,4 +66,47 @@ export interface SiteConfig {
   configPath: string;
   siteData: UserConfig;
   dependencies: string[];
+}
+/**
+ * 页面类型
+ */
+export type PageType = 'home' | 'doc' | 'custom' | '404';
+/**
+ * 元数据类型
+ */
+export interface FrontMatter {
+  title?: string;
+  description?: string;
+  pageType?: PageType;
+  // 是否显示侧边栏
+  sidebar?: boolean;
+  // 是否显示右侧大纲栏
+  outline?: boolean;
+}
+export interface Header {
+  id: string;
+  text: string;
+  depth: number;
+}
+/**
+ * 页面数据
+ */
+export interface PageData {
+  // 站点配置数据
+  siteData: UserConfig;
+  // 当前页面路由信息
+  pagePath: string;
+  // 页面的元数据
+  frontmatter: FrontMatter;
+  pageType: PageType;
+  toc?: Header[];
+}
+
+/**
+ * 页面模块
+ */
+export interface PageModule {
+  default: ComponentType;
+  frontmatter?: FrontMatter;
+  [key: string]: unknown;
 }
