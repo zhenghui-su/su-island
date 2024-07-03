@@ -1,4 +1,7 @@
 import { usePageData } from '@runtime';
+import { Nav } from '../components/Nav';
+import '../styles/base.css';
+import '../styles/vars.css';
 import 'uno.css';
 /**
  * 默认主题布局
@@ -22,8 +25,7 @@ export function Layout() {
 
   return (
     <div>
-      <div>Nav</div>
-      {getContent()}
+      <Nav />
     </div>
   );
 }
