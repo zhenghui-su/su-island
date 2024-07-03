@@ -3,6 +3,7 @@ import { SiteConfig } from 'shared/types/index';
 import { Plugin } from 'vite';
 import os from 'os';
 import { PACKAGE_ROOT } from 'node/constants';
+import sirv from 'sirv';
 
 const SITE_DATA_ID = 'su-island:site-data';
 /**
@@ -32,6 +33,7 @@ export function pluginConfig(
     },
     config() {
       return {
+        root: PACKAGE_ROOT,
         resolve: {
           alias: {
             '@runtime': join(PACKAGE_ROOT, 'src', 'runtime', 'index.ts')
@@ -76,6 +78,11 @@ export function pluginConfig(
         // ✅ 可行
         await restartServer();
       }
+    },
+    configureServer(server) {
+      // 静态资源处理-将用户静态资源根目录指向public
+      const publicDir = join(sitConfig.root, 'public');
+      server.middlewares.use(sirv(publicDir));
     }
   };
 }
