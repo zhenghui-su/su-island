@@ -3,6 +3,8 @@ import { Nav } from '../components/Nav';
 import '../styles/base.css';
 import '../styles/vars.css';
 import 'uno.css';
+import { HomeLayout } from './HomeLayout/index';
+
 /**
  * 默认主题布局
  *
@@ -15,7 +17,7 @@ export function Layout() {
   // 根据页面类型渲染不同的页面
   const getContent = () => {
     if (pageType === 'home') {
-      return <div>主页内容</div>;
+      return <HomeLayout />;
     } else if (pageType === 'doc') {
       return <div>正文内容</div>;
     } else {
@@ -26,6 +28,7 @@ export function Layout() {
   return (
     <div>
       <Nav />
+      {getContent()}
     </div>
   );
 }
