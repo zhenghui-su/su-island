@@ -71,6 +71,32 @@ export interface SiteConfig {
  * 页面类型
  */
 export type PageType = 'home' | 'doc' | 'custom' | '404';
+
+/**
+ * 首页下方特定卡片展示
+ */
+export interface Feature {
+  icon: string;
+  title: string;
+  details: string;
+}
+/**
+ * 首页中间的部分
+ */
+export interface Hero {
+  name: string;
+  text: string;
+  tagline: string;
+  image?: {
+    src: string;
+    alt: string;
+  };
+  actions: {
+    text: string;
+    link: string;
+    theme: 'brand' | 'alt';
+  }[];
+}
 /**
  * 元数据类型
  */
@@ -82,6 +108,10 @@ export interface FrontMatter {
   sidebar?: boolean;
   // 是否显示右侧大纲栏
   outline?: boolean;
+  // 首页卡片
+  features?: Feature[];
+  // 首页中间的图片和行为按钮
+  hero?: Hero;
 }
 export interface Header {
   id: string;
