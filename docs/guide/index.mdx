@@ -1,0 +1,28 @@
+# 发布 npm 包
+
+## 发布 npm 的包的好处是什么
+
+- 方便团队或者跨团队**共享代码**，使用 npm 包就可以方便的管理，并且还可以进行**版本控制**
+- 做**开源造轮子必备技术**，否则你做完的**轮子**如何让别人使用，难道是 U 盘拷贝？
+- 面试很经常问到
+- 增加**个人 IP**让更多的人知道你的技术能力和贡献
+
+## 发布前准备工作
+
+```bash
+npm adduser
+```
+
+首先先检查一下是否是 npm 源然后创建一个 npm 账号
+
+![image-20231026230219108](https://chen-1320883525.cos.ap-chengdu.myqcloud.com/img/image-20231026230219108.png)
+
+> 创建完成之后使用 npm login 登录账号
+
+![image-20231026230242389](https://chen-1320883525.cos.ap-chengdu.myqcloud.com/img/image-20231026230242389.png)
+
+登录完成之后使用`npm publish` 发布 npm 包
+
+![image-20231026230308317](https://chen-1320883525.cos.ap-chengdu.myqcloud.com/img/image-20231026230308317.png)
+
+发布成功，如果出现 403 说明**包名**被占用了

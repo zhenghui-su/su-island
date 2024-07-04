@@ -1,6 +1,8 @@
-import { usePageData } from '@runtime';
+import { Content, usePageData } from '@runtime';
 import { useLocation } from 'react-router-dom';
 import { Sidebar } from '../../components/Sidebar/index';
+import styles from './index.module.scss';
+import { DocFooter } from '../../components/DocFooter/index';
 
 /**
  * 文档文章布局
@@ -19,7 +21,19 @@ export function DocLayout() {
 
   return (
     <div>
+      {/* 侧边栏 */}
       <Sidebar sidebarData={matchedSidebar} pathname={pathname} />
+      {/* 正文内容 */}
+      <div className={styles.content}>
+        <div>
+          {/* 内容 */}
+          <div className="island-doc">
+            <Content />
+          </div>
+          {/* 底部上一页下一页 */}
+          <DocFooter />
+        </div>
+      </div>
     </div>
   );
 }
