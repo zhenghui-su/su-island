@@ -4,6 +4,7 @@ import '../styles/base.css';
 import '../styles/vars.css';
 import 'uno.css';
 import { HomeLayout } from './HomeLayout/index';
+import { DocLayout } from './DocLayout';
 
 /**
  * 默认主题布局
@@ -19,7 +20,7 @@ export function Layout() {
     if (pageType === 'home') {
       return <HomeLayout />;
     } else if (pageType === 'doc') {
-      return <div>正文内容</div>;
+      return <DocLayout />;
     } else {
       return <div>404 页面</div>;
     }
