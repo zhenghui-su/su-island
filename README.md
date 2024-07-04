@@ -73,7 +73,7 @@
 启动开发服务器运行:
 
 ```bash
-su-island dev
+su-island dev docs
 ```
 
 运行打包命令:
