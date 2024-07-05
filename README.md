@@ -50,7 +50,12 @@
 │   ├── shared // 公共共享目录
 │       └── types // 公共类型目录
 │   ├── theme-default // 默认主题目录
-│       ├── Layout // 默认主题布局
+│       ├── components // 主题组件
+│       ├── Layout // 主题布局
+│           ├── DocLayout // 文档界面布局
+│           ├── HomeLayout // 首页界面布局
+│       ├── logic // 主题交互逻辑
+│       ├── styles // 主题样式
 │       └── index // 导出
 ├── .eslintignore
 ├── .eslintrc.cjs // eslint 配置
