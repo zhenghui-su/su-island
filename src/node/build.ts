@@ -28,7 +28,7 @@ export async function bundle(root: string, config: SiteConfig) {
       plugins: await createVitePlugins(config, undefined, isServer),
       ssr: {
         // 将引入第三方包变为将这个包打包进产物
-        noExternal: ['react-router-dom']
+        noExternal: ['react-router-dom', 'lodash-es']
       },
       build: {
         ssr: isServer,
@@ -77,9 +77,7 @@ export async function renderPages(
   return Promise.all(
     routes.map(async (route) => {
       const routePath = route.path;
-      // 根组件 html 字符串代码
-      const appHtml = render(routePath);
-      // 拼接html, 同时将 js 代码拼入
+      const appHtml = await render(routePath);
       const html = `
 <!DOCTYPE html>
 <html>
@@ -99,8 +97,6 @@ export async function renderPages(
         : `${routePath}.html`;
       await fs.ensureDir(join(root, 'build', dirname(fileName)));
       await fs.writeFile(join(root, 'build', fileName), html);
-      // 移除ssr产物 .temp
-      await fs.remove(join(root, '.temp'));
     })
   );
 }
@@ -123,6 +119,8 @@ export async function build(root: string, config: SiteConfig) {
   );
   try {
     await renderPages(render, routes, root, clientBundle);
+    // 移除ssr产物 .temp
+    await fs.remove(join(root, '.temp'));
   } catch (e) {
     console.log('Render page error.\n', e);
   }
