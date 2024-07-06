@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Header } from 'shared/types';
 import { bindingAsideScroll, scrollToTarget } from '../../logic/asideScroll';
+import { useHeaders } from '../../logic/useHeaders';
 
 interface AsideProps {
   headers: Header[];
@@ -10,7 +11,8 @@ interface AsideProps {
  * @param props 传入页面大纲信息
  */
 export function Aside(props: AsideProps) {
-  const { headers = [] } = props;
+  const { headers: rawHeaders = [] } = props;
+  const headers = useHeaders(rawHeaders);
   const hasOutline = headers.length > 0;
 
   useEffect(() => {
