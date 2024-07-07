@@ -23,3 +23,7 @@ export const DEFAULT_HTML_PATH = join(PACKAGE_ROOT, 'template.html');
  * MDX文件正则表达式
  */
 export const MD_REGEX = /\.mdx?$/;
+/**
+ * 分隔符
+ */
+export const MASK_SPLITTER = '!!ISLAND!!';
