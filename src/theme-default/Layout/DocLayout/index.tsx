@@ -36,7 +36,7 @@ export function DocLayout() {
         </div>
         {/* 右边大纲 */}
         <div className={styles.asideContainer}>
-          <Aside headers={toc} />
+          <Aside headers={toc} __island />
         </div>
       </div>
     </div>
