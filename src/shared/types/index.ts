@@ -141,3 +141,9 @@ export interface PageModule {
   toc?: Header[];
   [key: string]: unknown;
 }
+/**
+ * island组件标识
+ */
+export type PropsWithIsland = {
+  __island?: boolean;
+};

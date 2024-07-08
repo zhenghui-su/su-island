@@ -8,7 +8,7 @@ import { SwitchAppearance } from '../SwitchAppearance';
  *
  * @param item 普通菜单项
  */
-function MenuItem(item: NavItemWithLink) {
+export function MenuItem({ item }: { item: NavItemWithLink }) {
   return (
     <div className="text-sm font-medium mx-3">
       <a href={item.link} className={styles.link}>
@@ -48,7 +48,7 @@ export function Nav() {
           {/* 菜单选项 */}
           <div flex="~">
             {nav.map((item) => (
-              <MenuItem {...item} key={item.text} />
+              <MenuItem item={item} key={item.text} />
             ))}
           </div>
           {/* 主题切换 */}
