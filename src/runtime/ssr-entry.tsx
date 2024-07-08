@@ -10,7 +10,8 @@ import { DataContext } from './hooks';
 export async function render(pagePath: string) {
   // 生产 pageData
   const pageData = await initPageData(pagePath);
-
+  const { clearIslandData } = await import('./jsx-runtime');
+  clearIslandData();
   return renderToString(
     <DataContext.Provider value={pageData}>
       <StaticRouter location={pagePath}>
