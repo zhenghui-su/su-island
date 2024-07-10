@@ -13,6 +13,7 @@
     "start": "cd build && serve .",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx ./",
     "lint:fix": "eslint --fix --ext .ts,.tsx,.js,.jsx --quiet ./",
+    "test": "pnpm test:unit && pnpm test:e2e",
     "test:unit": "vitest run",
     "test:init": "vitest --ui",
     "test:e2e": "playwright test",
