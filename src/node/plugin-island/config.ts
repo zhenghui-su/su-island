@@ -4,6 +4,7 @@ import { Plugin } from 'vite';
 import os from 'os';
 import { PACKAGE_ROOT } from 'node/constants';
 import sirv from 'sirv';
+import fs from 'fs-extra';
 
 const SITE_DATA_ID = 'su-island:site-data';
 /**
@@ -82,7 +83,9 @@ export function pluginConfig(
     configureServer(server) {
       // 静态资源处理-将用户静态资源根目录指向public
       const publicDir = join(sitConfig.root, 'public');
-      server.middlewares.use(sirv(publicDir));
+      if (fs.existsSync(publicDir)) {
+        server.middlewares.use(sirv(publicDir));
+      }
     }
   };
 }
