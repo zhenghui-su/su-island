@@ -35,7 +35,10 @@ export function pluginRoutes(options: PluginOptions): Plugin {
     },
     load(id) {
       if (id === '\0' + CONVENTIONAL_ROUTES_ID) {
-        return routeService.generateRoutesCode(options.isSSR);
+        return {
+          code: routeService.generateRoutesCode(options?.isSSR),
+          moduleSideEffects: false
+        };
       }
     }
   };
