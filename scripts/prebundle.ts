@@ -15,7 +15,7 @@ async function preBundle(deps: string[]) {
     const flattedName = item.replace(/\//g, '_');
     flattenDepMap[flattedName] = item;
   });
-  const outputAbsolutePath = path.join(process.cwd(), PRE_BUNDLE_DIR);
+  const outputAbsolutePath = path.join(process.cwd(), 'PRE_BUNDLE_DIR');
 
   if (await fs.pathExists(outputAbsolutePath)) {
     await fs.remove(outputAbsolutePath);
@@ -30,7 +30,7 @@ async function preBundle(deps: string[]) {
     platform: 'browser', // 产物运行平台
     plugins: [
       {
-        name: 'prebundle',
+        name: 'pre-bundle',
         setup(build) {
           // 捕获引入的import
           build.onResolve({ filter: /^[\w@][^:]/ }, async (args) => {
