@@ -14,7 +14,7 @@ interface PluginOptions {
   isSSR: boolean;
 }
 
-export const CONVENTIONAL_ROUTES_ID = 'su-island:routes';
+export const CONVENTIONAL_ROUTES_ID = 'virtual:routes';
 /**
  * 用于约定式路由-自动生成路由routes
  *
@@ -24,7 +24,7 @@ export const CONVENTIONAL_ROUTES_ID = 'su-island:routes';
 export function pluginRoutes(options: PluginOptions): Plugin {
   const routeService = new RouteService(options.root);
   return {
-    name: 'su-island:routes',
+    name: 'island:vite-plugin-routes',
     async configResolved() {
       await routeService.init();
     },

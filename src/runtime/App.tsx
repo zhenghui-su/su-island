@@ -1,6 +1,6 @@
 import { matchRoutes } from 'react-router-dom';
 import { Layout } from '../theme-default';
-import { routes } from 'su-island:routes';
+import { routes } from 'virtual:routes';
 import { Route } from 'node/plugin-routes';
 import { PageData } from 'shared/types';
 import siteData from 'su-island:site-data';

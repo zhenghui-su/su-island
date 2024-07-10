@@ -5,7 +5,7 @@ declare module 'su-island:site-data' {
   const siteData: UserConfig;
   export default siteData;
 }
-declare module 'su-island:routes' {
+declare module 'virtual:routes' {
   import { RouteObject } from 'react-router-dom';
   const routes: RouteObject[];
   export { routes };

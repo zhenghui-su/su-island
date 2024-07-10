@@ -39,4 +39,4 @@ export async function render(pagePath: string, helmetContext: object) {
 /**
  * 导出路由数据
  */
-export { routes } from 'su-island:routes';
+export { routes } from 'virtual:routes';
