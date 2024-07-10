@@ -23,7 +23,7 @@ export function DocLayout() {
   return (
     <div>
       {/* 侧边栏 */}
-      <Sidebar sidebarData={matchedSidebar} pathname={pathname} />
+      <Sidebar sidebarData={matchedSidebar} pathname={pathname} __island />
       {/* 正文内容 */}
       <div className={styles.content} flex="~">
         <div className={styles.docContent}>
