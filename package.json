@@ -1,6 +1,6 @@
 {
   "name": "su-island",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "一款SSG生成框架, 用于快速搭建文档中心, 类似 vitePress",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
