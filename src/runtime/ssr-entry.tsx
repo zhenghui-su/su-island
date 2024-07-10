@@ -5,7 +5,7 @@ import { DataContext } from './hooks';
 
 export interface RenderResult {
   appHtml: string;
-  propsData: unknown[];
+  islandProps: unknown[];
   islandToPathMap: Record<string, string>;
 }
 
@@ -17,7 +17,6 @@ export async function render(pagePath: string) {
   // 生产 pageData
   const pageData = await initPageData(pagePath);
   const { clearIslandData, data } = await import('./jsx-runtime');
-  const { islandProps, islandToPathMap } = data;
   clearIslandData();
   const appHtml = renderToString(
     <DataContext.Provider value={pageData}>
@@ -26,6 +25,8 @@ export async function render(pagePath: string) {
       </StaticRouter>
     </DataContext.Provider>
   );
+  const { islandProps, islandToPathMap } = data;
+
   return {
     appHtml,
     islandProps,
