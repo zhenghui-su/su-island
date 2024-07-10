@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "packageManager": "pnpm@7.9.2",
   "scripts": {
     "prepare": "husky install",
     "dev": "tsup --watch",
