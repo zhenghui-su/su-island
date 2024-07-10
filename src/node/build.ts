@@ -15,6 +15,7 @@ import { SiteConfig } from 'shared/types';
 import { createVitePlugins } from './vitePlugins';
 import { Route } from './plugin-routes';
 import { RenderResult } from 'runtime/ssr-entry';
+import { HelmetData } from 'react-helmet-async';
 
 const CLIENT_OUTPUT = 'build';
 
@@ -160,7 +161,7 @@ window.ISLAND_PROPS = JSON.parse(
  * @param clientBundle 客户端打包产物
  */
 export async function renderPages(
-  render: (url: string) => RenderResult,
+  render: (url: string, helmetContext: object) => RenderResult,
   routes: Route[],
   root: string,
   clientBundle: RollupOutput
@@ -173,11 +174,14 @@ export async function renderPages(
   return Promise.all(
     routes.map(async (route) => {
       const routePath = route.path;
+      const helmetContext = {
+        context: {}
+      } as HelmetData;
       const {
         appHtml,
         islandToPathMap,
         islandProps = []
-      } = await render(routePath);
+      } = await render(routePath, helmetContext.context);
       // 获取样式资源
       const styleAssets = clientBundle.output.filter(
         (chunk) => chunk.type === 'asset' && chunk.fileName.endsWith('.css')
@@ -185,6 +189,8 @@ export async function renderPages(
       const islandBundle = await buildIslands(root, islandToPathMap);
       // 获取island组件代码
       const islandCode = (islandBundle as RollupOutput).output[0].code;
+      // 接收head信息
+      const { helmet } = helmetContext.context;
       // 规范化
       const normalizeVendorFilename = (fileName: string) => {
         return fileName.replace(/\//g, '_') + '.js';
@@ -195,7 +201,10 @@ export async function renderPages(
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>title</title>
+    ${helmet?.title?.toString() || ''}
+    ${helmet?.meta?.toString() || ''}
+    ${helmet?.link?.toString() || ''}
+    ${helmet?.style?.toString() || ''}
     <meta name="description" content="su-island">
      ${styleAssets
        .map((item) => `<link rel="stylesheet" href="/${item.fileName}">`)

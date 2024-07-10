@@ -24,7 +24,8 @@ export async function initPageData(routePath: string): Promise<PageData> {
       siteData,
       frontmatter: moduleInfo.frontmatter,
       pagePath: routePath,
-      toc: moduleInfo.toc
+      toc: moduleInfo.toc,
+      title: moduleInfo.title
     };
   }
   // 没有就返回404
@@ -32,7 +33,8 @@ export async function initPageData(routePath: string): Promise<PageData> {
     pageType: '404',
     siteData,
     pagePath: routePath,
-    frontmatter: {}
+    frontmatter: {},
+    title: '404'
   };
 }
 
