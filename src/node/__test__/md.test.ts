@@ -58,18 +58,43 @@ describe('Markdown complie cases', async () => {
       .use(remarkPluginToc)
       .use(remarkStringify);
 
-    const mdTitle = '## title `xxx` [link](/path)';
+    const mdTitle = `
+    # h1
+    ## h2 \`code\`
+    ### h3 [link](https://www.xiaosu2003.cm)
+    #### h4
+    ##### h5`;
     const result = remarkProcessor.processSync(mdTitle);
     expect(result.value.toString().replace(mdTitle, '')).toMatchInlineSnapshot(`
-      "
+      "# h1
+
+      ## h2 \`code\`
+
+      ### h3 [link](https://www.xiaosu2003.cm)
+
+      #### h4
+
+      ##### h5
 
       export const toc = [
         {
-          \\"id\\": \\"title-xxx-link\\",
-          \\"text\\": \\"title xxx link\\",
+          \\"id\\": \\"h2-code\\",
+          \\"text\\": \\"h2 code\\",
           \\"depth\\": 2
+        },
+        {
+          \\"id\\": \\"h3-link\\",
+          \\"text\\": \\"h3 link\\",
+          \\"depth\\": 3
+        },
+        {
+          \\"id\\": \\"h4\\",
+          \\"text\\": \\"h4\\",
+          \\"depth\\": 4
         }
       ]
+
+      export const title = 'h1';
       "
     `);
   });
