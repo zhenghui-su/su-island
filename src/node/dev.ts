@@ -16,7 +16,6 @@ export async function createDevServer(
   return createViteDevServer({
     // 需要设置为su-island框架的路径,
     // 防止vite将用户的资源作为静态资源处理
-    root: PACKAGE_ROOT,
     plugins: await createVitePlugins(siteConfig, restartServer),
     server: {
       fs: {
