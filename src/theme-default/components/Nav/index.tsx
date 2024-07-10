@@ -1,5 +1,5 @@
 import { usePageData } from '@runtime';
-import { NavItemWithLink } from 'shared/types';
+import { NavItemWithLink, PropsWithIsland } from 'shared/types';
 import styles from './index.module.scss';
 import { SwitchAppearance } from '../SwitchAppearance';
 
@@ -20,7 +20,8 @@ export function MenuItem({ item }: { item: NavItemWithLink }) {
 /**
  * 头部导航栏组件
  */
-export function Nav() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Nav(props: PropsWithIsland) {
   // 拿到配置数据
   const { siteData } = usePageData();
   // 获取配置数据中的导航栏的配置
@@ -53,7 +54,7 @@ export function Nav() {
           </div>
           {/* 主题切换 */}
           <div before="menu-item-before" flex="~">
-            <SwitchAppearance />
+            <SwitchAppearance __island />
           </div>
           {/* 相关链接 */}
           <div className={styles.socialLinkIcon} before="menu-item-before">
