@@ -92,7 +92,7 @@ su-island build docs
 运行如下命令进行预览
 
 ```bash
-su-island preview docs
+su-island start docs
 ```
 
 tsup 编译运行监控命令:
