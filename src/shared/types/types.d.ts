@@ -6,7 +6,6 @@ declare module 'su-island:site-data' {
   export default siteData;
 }
 declare module 'virtual:routes' {
-  import { RouteObject } from 'react-router-dom';
-  const routes: RouteObject[];
-  export { routes };
+  import type { Route } from 'node/plugin-routes';
+  export const routes: Route[];
 }
