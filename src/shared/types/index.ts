@@ -59,6 +59,7 @@ export interface UserConfig {
   description?: string;
   themeConfig?: ThemeConfig;
   vite?: ViteConfiguration;
+  base?: string;
 }
 // 增加配置类型
 export interface SiteConfig {
@@ -66,6 +67,8 @@ export interface SiteConfig {
   configPath: string;
   siteData: UserConfig;
   dependencies: string[];
+  base?: string;
+  outDir?: string;
 }
 /**
  * 页面类型

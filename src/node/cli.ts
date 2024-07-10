@@ -2,7 +2,7 @@ import cac from 'cac';
 import { build } from './build';
 import { resolve } from 'path';
 import { resolveConfig } from './config';
-import { preview } from './preview';
+import { CLIServeOption, preview } from './preview';
 
 // 创建cli
 const cli = cac('su-island').version('0.0.1').help();
@@ -46,12 +46,13 @@ cli
   });
 
 cli
-  .command('preview [root]', 'preview production build')
-  .option('--port <port>', 'port to use for preview server')
-  .action(async (root: string, { port }: { port: number }) => {
+  .command('start [root]', 'serve for production') // default command
+  .option('--port <port>', 'port to use for serve')
+  .option('--host <host>', '[string] specify hostname')
+  .action(async (root: string, serveOptions: CLIServeOption) => {
     try {
       root = resolve(root);
-      await preview(root, { port });
+      await preview(root, serveOptions);
     } catch (e) {
       console.log(e);
     }

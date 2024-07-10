@@ -8,7 +8,7 @@
 		"dev": "tsup --watch",
 		"build": "tsup && pnpm build:deps",
 		"build:deps": "tsx ./scripts/prebundle.ts",
-		"preview": "cd build && serve .",
+		"start": "su-island start docs",
 		"lint": "eslint --ext .ts,.tsx,.js,.jsx ./",
 		"lint:fix": "eslint --fix --ext .ts,.tsx,.js,.jsx --quiet ./",
 		"test:unit": "vitest run",
