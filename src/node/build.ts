@@ -9,7 +9,7 @@ import {
 } from './constants';
 import path, { dirname, join } from 'path';
 import fs from 'fs-extra';
-// import ora from 'ora';
+import ora from 'ora';
 import { pathToFileURL } from 'url';
 import { SiteConfig } from 'shared/types';
 import { createVitePlugins } from './vitePlugins';
@@ -18,13 +18,15 @@ import { RenderResult } from 'runtime/ssr-entry';
 import { HelmetData } from 'react-helmet-async';
 
 const CLIENT_OUTPUT = 'build';
+export const okMark = '\x1b[32m✓\x1b[0m';
+export const failMark = '\x1b[31m✖\x1b[0m';
 
 // Client entry -> react & react-dom
 // Island bundle -> react
 // 两者会出现不同的 react包, 导致多实例问题
 
 // 用于绕过tsc, 不让其将import的导入转为require
-// const dynamicImport = new Function("m", "return import(m)")
+const dynamicImport = new Function('m', 'return import(m)');
 
 export async function bundle(root: string, config: SiteConfig) {
   /**
@@ -58,8 +60,8 @@ export async function bundle(root: string, config: SiteConfig) {
     };
   };
   // 创建动画
-  // const spinner = ora();
-  // spinner.start('Building client + server bundles...');
+  const spinner = ora();
+  spinner.start('Building client + server bundles...\n');
   try {
     const [clientBundle, serverBundle] = await Promise.all([
       // client build
@@ -67,6 +69,9 @@ export async function bundle(root: string, config: SiteConfig) {
       // server build
       viteBuild(await resolveViteConfig(true))
     ]);
+    spinner.stopAndPersist({
+      symbol: okMark
+    });
     // 复制public到build产物
     const publicDir = join(root, 'public');
     if (fs.pathExistsSync(publicDir)) {
@@ -76,6 +81,9 @@ export async function bundle(root: string, config: SiteConfig) {
     await fs.copy(join(PACKAGE_ROOT, 'vendors'), join(root, CLIENT_OUTPUT));
     return [clientBundle, serverBundle] as [RollupOutput, RollupOutput];
   } catch (e) {
+    spinner.stopAndPersist({
+      symbol: failMark
+    });
     console.log(e);
   }
 }
@@ -99,7 +107,7 @@ async function buildIslands(
     ${Object.entries(islandPathToMap)
       .map(
         ([islandName, islandPath]) =>
-          `import { ${islandName} } from '${islandPath}'`
+          `import { ${islandName} } from '${islandPath}';`
       )
       .join('')}
 window.ISLANDS = { ${Object.keys(islandPathToMap).join(', ')} };
@@ -133,7 +141,7 @@ window.ISLAND_PROPS = JSON.parse(
           }
 
           if (id === injectId) {
-            return id;
+            return injectId;
           }
         },
         load(id) {
@@ -166,11 +174,13 @@ export async function renderPages(
   root: string,
   clientBundle: RollupOutput
 ) {
-  console.log('Rendering page in server side...');
   // 1. 找到客户端打包的入口chunk文件
   const clientChunk = clientBundle.output.find(
     (chunk) => chunk.type === 'chunk' && chunk.isEntry
   );
+  const { default: ora } = await dynamicImport('ora');
+  const spinner = ora();
+  spinner.start('Rendering page in server side...');
   return Promise.all(
     [
       ...routes,
@@ -236,8 +246,15 @@ export async function renderPages(
         : `${routePath}.html`;
       await fs.ensureDir(join(root, 'build', dirname(fileName)));
       await fs.writeFile(join(root, 'build', fileName), html);
+      spinner.stopAndPersist({
+        symbol: okMark
+      });
     })
-  );
+  ).catch(() => {
+    spinner.stopAndPersist({
+      symbol: failMark
+    });
+  });
 }
 
 /**
