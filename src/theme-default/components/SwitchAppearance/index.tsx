@@ -1,5 +1,6 @@
 import { toggle } from '../../logic/toggleAppearance';
 import styles from './index.module.scss';
+import { PropsWithIsland } from '../../../shared/types/index';
 
 interface SwitchProps {
   onClick?: () => void;
@@ -26,7 +27,8 @@ export function Switch(props: SwitchProps) {
 /**
  * 主题切换按钮组件
  */
-export function SwitchAppearance() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function SwitchAppearance(props: PropsWithIsland) {
   return (
     <Switch onClick={toggle}>
       {/* 白天模式 */}

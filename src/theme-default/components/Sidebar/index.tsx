@@ -1,4 +1,4 @@
-import { SidebarGroup, SidebarItem } from 'shared/types';
+import { SidebarGroup, SidebarItem, PropsWithIsland } from 'shared/types';
 import styles from './index.module.scss';
 import { Link } from '../Link/index';
 
@@ -11,7 +11,7 @@ interface SidebarProps {
  * 文档界面侧边栏组件
  * @param props 传入侧边栏数据和路径名称
  */
-export function Sidebar(props: SidebarProps) {
+export function Sidebar(props: SidebarProps & PropsWithIsland) {
   const { sidebarData, pathname } = props;
   // 渲染侧边栏每一项item
   const renderGroupItem = (item: SidebarItem) => {
