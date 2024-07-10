@@ -6,6 +6,7 @@ import '../styles/doc.css';
 import 'uno.css';
 import { HomeLayout } from './HomeLayout/index';
 import { DocLayout } from './DocLayout';
+import { Helmet } from 'react-helmet-async';
 
 /**
  * 默认主题布局
@@ -14,7 +15,7 @@ import { DocLayout } from './DocLayout';
 export function Layout() {
   // 获取页面数据
   const pageData = usePageData();
-  const { pageType } = pageData;
+  const { pageType, title } = pageData;
 
   // 根据页面类型渲染不同的页面
   const getContent = () => {
@@ -29,6 +30,9 @@ export function Layout() {
 
   return (
     <div>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
       <Nav />
       <section
         style={{
