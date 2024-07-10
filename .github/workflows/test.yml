@@ -27,10 +27,10 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2
 
-      - name: Set node version to 16.18.1
+      - name: Set node version to 16.20.2
         uses: actions/setup-node@v3
         with:
-          node-version: 16.18.1
+          node-version: 16.20.2
           cache: 'pnpm'
 
       - name: Install deps
