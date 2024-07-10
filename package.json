@@ -24,7 +24,7 @@
     "release": "tsx ./scripts/release.ts"
   },
   "bin": {
-    "su-island": "/bin/island.js"
+    "su-island": "./bin/island.js"
   },
   "keywords": [
     "vite",

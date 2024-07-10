@@ -18,7 +18,7 @@ export class RouteService {
   // 扫描的路径
   #scanDir: string;
   // 路由信息
-  #routeMeta: RouteMeta[] = [];
+  #routeData: RouteMeta[] = [];
   constructor(scanDir: string) {
     this.#scanDir = scanDir;
   }
@@ -29,7 +29,7 @@ export class RouteService {
       .sync(['**/*.{js,jsx,ts,tsx,md,mdx}'], {
         cwd: this.#scanDir, // 工作目录
         absolute: true, // 返回文件绝对路径
-        ignore: ['**/build/**', '**/.island/**', 'config.ts'] // 忽略的文件
+        ignore: ['**/node_modules/**', '**/build/**', 'config.ts'] // 忽略的文件
       })
       .sort();
     files.forEach((file) => {
@@ -39,18 +39,29 @@ export class RouteService {
       );
       // 路由路径
       const routePath = this.normalizeRoutePath(fileRelativePath);
-      this.#routeMeta.push({
+      this.#routeData.push({
         routePath,
         absolutePath: file
       });
     });
+  }
+  // 获取路由信息
+  getRouteMeta() {
+    return this.#routeData;
+  }
+  // 去除后缀和index, 保证路由路径以 / 开头
+  normalizeRoutePath(rawPath: string) {
+    // 将后缀去掉, index 也去掉
+    const routePath = rawPath.replace(/\.(.*)?$/, '').replace(/index$/, '');
+    // 保证路由路径以 / 开头
+    return routePath.startsWith('/') ? routePath : `/${routePath}`;
   }
   // 生成模块最终的代码信息
   generateRoutesCode(ssr = false) {
     return `
 import React from 'react';
 ${ssr ? '' : 'import loadable from "@loadable/component";'}
-${this.#routeMeta
+${this.#routeData
   .map((route, index) => {
     // 使用loadable/component 实现按需加载
     // 在 SSR/SSG 阶段，所有的 JS 都通过本地磁盘进行读取，并没有网络 IO 开销相关的负担，因此我们可以通过静态 import 来导入组件。
@@ -60,22 +71,12 @@ ${this.#routeMeta
   })
   .join('\n')}
 export const routes = [
-  ${this.#routeMeta.map((route, index) => {
-    return `{ path: '${route.routePath}', element: React.createElement
-    (Route${index}), preload: () => import('${route.absolutePath}') }`;
-  })}
+  ${this.#routeData
+    .map((route, index) => {
+      return `{ path: '${route.routePath}', element: React.createElement(Route${index}), preload: () => import('${route.absolutePath}') }`;
+    })
+    .join(',\n')}
 ];
 `;
-  }
-  // 获取路由信息
-  getRouteMeta() {
-    return this.#routeMeta;
-  }
-  // 去除后缀和index, 保证路由路径以 / 开头
-  normalizeRoutePath(raw: string) {
-    // 将后缀去掉, index 也去掉
-    const routePath = raw.replace(/\.(.*)?$/, '').replace(/index$/, '');
-    // 保证路由路径以 / 开头
-    return routePath.startsWith('/') ? routePath : `/${routePath}`;
   }
 }
