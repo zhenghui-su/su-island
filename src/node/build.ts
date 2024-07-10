@@ -2,7 +2,9 @@ import { build as viteBuild, InlineConfig } from 'vite';
 import type { RollupOutput } from 'rollup';
 import {
   CLIENT_ENTRY_PATH,
+  EXTERNALS,
   MASK_SPLITTER,
+  PACKAGE_ROOT,
   SERVER_ENTRY_PATH
 } from './constants';
 import path, { dirname, join } from 'path';
@@ -14,7 +16,7 @@ import { createVitePlugins } from './vitePlugins';
 import { Route } from './plugin-routes';
 import { RenderResult } from 'runtime/ssr-entry';
 
-const CLENT_BUILD = 'build';
+const CLIENT_OUTPUT = 'build';
 
 // Client entry -> react & react-dom
 // Island bundle -> react
@@ -43,12 +45,13 @@ export async function bundle(root: string, config: SiteConfig) {
       },
       build: {
         ssr: isServer,
-        outDir: isServer ? join(root, '.temp') : join(root, CLENT_BUILD),
+        outDir: isServer ? join(root, '.temp') : join(root, CLIENT_OUTPUT),
         rollupOptions: {
           input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
           output: {
             format: isServer ? 'cjs' : 'esm'
-          }
+          },
+          external: EXTERNALS
         }
       }
     };
@@ -66,8 +69,10 @@ export async function bundle(root: string, config: SiteConfig) {
     // 复制public到build产物
     const publicDir = join(root, 'public');
     if (fs.pathExistsSync(publicDir)) {
-      await fs.copy(publicDir, join(root, CLENT_BUILD));
+      await fs.copy(publicDir, join(root, CLIENT_OUTPUT));
     }
+    // 复制importmap产物vendors到build中
+    await fs.copy(join(PACKAGE_ROOT, 'vendors'), join(root, CLIENT_OUTPUT));
     return [clientBundle, serverBundle] as [RollupOutput, RollupOutput];
   } catch (e) {
     console.log(e);
@@ -104,11 +109,15 @@ window.ISLAND_PROPS = JSON.parse(
   const injectId = 'island:inject';
   return viteBuild({
     mode: 'production',
+    esbuild: {
+      jsx: 'automatic'
+    },
     build: {
       // 输出目录
       outDir: path.join(root, '.temp'),
       rollupOptions: {
-        input: injectId
+        input: injectId,
+        external: EXTERNALS
       }
     },
     plugins: [
@@ -167,7 +176,7 @@ export async function renderPages(
       const {
         appHtml,
         islandToPathMap,
-        propsData = []
+        islandProps = []
       } = await render(routePath);
       // 获取样式资源
       const styleAssets = clientBundle.output.filter(
@@ -176,6 +185,10 @@ export async function renderPages(
       const islandBundle = await buildIslands(root, islandToPathMap);
       // 获取island组件代码
       const islandCode = (islandBundle as RollupOutput).output[0].code;
+      // 规范化
+      const normalizeVendorFilename = (fileName: string) => {
+        return fileName.replace(/\//g, '_') + '.js';
+      };
       const html = `
 <!DOCTYPE html>
 <html>
@@ -187,12 +200,21 @@ export async function renderPages(
      ${styleAssets
        .map((item) => `<link rel="stylesheet" href="/${item.fileName}">`)
        .join('\n')}
+    <script type="importmap">
+      {
+        "imports": {
+          ${EXTERNALS.map(
+            (name) => `"${name}": "/${normalizeVendorFilename(name)}"`
+          ).join(',')}
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root">${appHtml}</div>
     <script type="module">${islandCode}</script>
     <script type="module" src="/${clientChunk?.fileName}"></script>
-    <script id="island-props">${JSON.stringify(propsData)}</script>
+    <script id="island-props">${JSON.stringify(islandProps)}</script>
   </body>
 </html>`.trim();
       const fileName = routePath.endsWith('/')

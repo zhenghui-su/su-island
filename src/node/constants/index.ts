@@ -27,3 +27,12 @@ export const MD_REGEX = /\.mdx?$/;
  * 分隔符
  */
 export const MASK_SPLITTER = '!!ISLAND!!';
+/**
+ * importmap 依赖
+ */
+export const EXTERNALS = [
+  'react',
+  'react-dom',
+  'react-dom/client',
+  'react/jsx-runtime'
+];
