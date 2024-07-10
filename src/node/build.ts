@@ -14,6 +14,12 @@ import { createVitePlugins } from './vitePlugins';
 import { Route } from './plugin-routes';
 import { RenderResult } from 'runtime/ssr-entry';
 
+const CLENT_BUILD = 'build';
+
+// Client entry -> react & react-dom
+// Island bundle -> react
+// 两者会出现不同的 react包, 导致多实例问题
+
 // 用于绕过tsc, 不让其将import的导入转为require
 // const dynamicImport = new Function("m", "return import(m)")
 
@@ -37,7 +43,7 @@ export async function bundle(root: string, config: SiteConfig) {
       },
       build: {
         ssr: isServer,
-        outDir: isServer ? join(root, '.temp') : join(root, 'build'),
+        outDir: isServer ? join(root, '.temp') : join(root, CLENT_BUILD),
         rollupOptions: {
           input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
           output: {
@@ -57,6 +63,11 @@ export async function bundle(root: string, config: SiteConfig) {
       // server build
       viteBuild(await resolveViteConfig(true))
     ]);
+    // 复制public到build产物
+    const publicDir = join(root, 'public');
+    if (fs.pathExistsSync(publicDir)) {
+      await fs.copy(publicDir, join(root, CLENT_BUILD));
+    }
     return [clientBundle, serverBundle] as [RollupOutput, RollupOutput];
   } catch (e) {
     console.log(e);
@@ -153,8 +164,18 @@ export async function renderPages(
   return Promise.all(
     routes.map(async (route) => {
       const routePath = route.path;
-      const { appHtml, islandToPathMap, propsData } = await render(routePath);
-      await buildIslands(root, islandToPathMap);
+      const {
+        appHtml,
+        islandToPathMap,
+        propsData = []
+      } = await render(routePath);
+      // 获取样式资源
+      const styleAssets = clientBundle.output.filter(
+        (chunk) => chunk.type === 'asset' && chunk.fileName.endsWith('.css')
+      );
+      const islandBundle = await buildIslands(root, islandToPathMap);
+      // 获取island组件代码
+      const islandCode = (islandBundle as RollupOutput).output[0].code;
       const html = `
 <!DOCTYPE html>
 <html>
@@ -162,11 +183,16 @@ export async function renderPages(
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>title</title>
-    <meta name="description" content="xxx">
+    <meta name="description" content="su-island">
+     ${styleAssets
+       .map((item) => `<link rel="stylesheet" href="/${item.fileName}">`)
+       .join('\n')}
   </head>
   <body>
     <div id="root">${appHtml}</div>
+    <script type="module">${islandCode}</script>
     <script type="module" src="/${clientChunk?.fileName}"></script>
+    <script id="island-props">${JSON.stringify(propsData)}</script>
   </body>
 </html>`.trim();
       const fileName = routePath.endsWith('/')
