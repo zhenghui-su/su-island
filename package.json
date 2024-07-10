@@ -25,7 +25,10 @@
   "bin": {
     "su-island": "/bin/island.js"
   },
-  "keywords": ["vite", "ssg"],
+  "keywords": [
+    "vite",
+    "ssg"
+  ],
   "author": "suzhenghui",
   "license": "MIT",
   "lint-staged": {
